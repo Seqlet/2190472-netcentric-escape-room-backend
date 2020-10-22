@@ -2,10 +2,9 @@ import { JoinRoom } from "./Interfaces/index";
 import { Event, Player, HatType, PlayerType, Position } from "./Interfaces";
 import { randomID, randomPos } from "./random";
 import { Server } from "socket.io";
-import gameArray from "./mock";
+import gameArray from "./game";
 
 function joinRoom({ playerName, roomCode }: JoinRoom, io: Server) {
-  console.log("Name: " + playerName);
   const game = gameArray.find((room) => room.roomCode === roomCode);
   let secPlayerType = PlayerType.SPECTATOR;
   let playerPos: Position | null = null;

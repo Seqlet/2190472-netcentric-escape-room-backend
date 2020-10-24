@@ -1,5 +1,5 @@
 import { Game, Player, Event } from "./Interfaces/index";
-import { Server, Socket } from 'socket.io';
+import { Socket } from 'socket.io';
 import gameArray from "./game";
 
 function prejoinRoom(roomCode:String, socket: Socket) {

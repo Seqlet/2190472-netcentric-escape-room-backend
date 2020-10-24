@@ -4,7 +4,7 @@ const app = express();
 import http from "http";
 const server = http.createServer(app);
 const PORT = process.env.PORT || 8000;
-import socketio, { Server, Socket } from "socket.io";
+import socketio, { Socket } from "socket.io";
 import prejoinRoom from "./prejoinroom";
 import joinRoom from "./joinroom";
 import createGame from "./createroom";

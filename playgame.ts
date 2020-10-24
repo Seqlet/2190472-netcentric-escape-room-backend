@@ -1,23 +1,23 @@
-import { Game, Player,Event } from "./Interfaces/index";
-import { Server } from "socket.io";
+import { Game, Player, Event } from "./Interfaces/index";
+import {  Socket } from "socket.io";
 import gameArray from "./game";
 
-function playGame(updatedPlayer: Player, io: Server) {
+function playGame(updatedPlayer: Player, socket: Socket) {
   const updatedPlayerId = updatedPlayer.id;
-//   const camparedId = () => 
-  const currentGame = findGame(gameArray,updatedPlayer);
-  let playerInGame = currentGame?.players.find(
+  const currentGame = findGame(gameArray, updatedPlayer);
+  let playerIndex = currentGame?.players.findIndex(
     (player) => player.id === updatedPlayerId
   );
-  playerInGame = updatedPlayer;
-  io.emit(Event.PLAY_GAME, currentGame);
+  if (playerIndex !== null) {
+    currentGame!.players[playerIndex as number] = updatedPlayer;
+  }
+  socket.emit(Event.PLAY_GAME, currentGame);
 }
 export default playGame;
 
-export function findGame(gamewa : Game[],player: Player){
-    const currentGame = gamewa.find((game) =>
+export function findGame(gamewa: Game[], player: Player) {
+  const currentGame = gamewa.find((game) =>
     game.players.every((user) => user.id === player.id)
   );
   return currentGame;
 }
-

@@ -4,7 +4,7 @@ const app = express();
 import http from "http";
 const server = http.createServer(app);
 const PORT = process.env.PORT || 8000;
-import socketio, { Server, Socket } from "socket.io";
+import socketio, { Socket } from "socket.io";
 import prejoinRoom from "./prejoinroom";
 import joinRoom from "./joinroom";
 import createGame from "./createroom";
@@ -22,22 +22,22 @@ app.get("/", (req, res) => {
 io.on("connection", function (socket: Socket) {
   console.log("user connected");
   socket.on(Event.PREJOIN_ROOM, function (roomCode: string) {
-    prejoinRoom(roomCode, io);
+    prejoinRoom(roomCode, socket);
   });
   socket.on(Event.JOIN_ROOM, function (data: JoinRoom) {
-    joinRoom(data, io);
+    joinRoom(data, socket);
   });
   socket.on(Event.CREATE_GAME, function (playerName: string) {
-    createGame(playerName, io);
+    createGame(playerName, socket);
   });
 
-  socket.on(Event.PLAY_GAME, function (player: Player) {
+  socket.on(Event.PLAY_GAME, function (player: Player, update?: boolean) {
     const game = findGame(gameArray, player);
     let id = game?.intervalSet;
-    if (game?.intervalSet === null) {
+    if (!update && game?.intervalSet === null) {
       id = setInterval(() => myTimer(game, io), 1000);
     }
-    playGame(player, io);
+    playGame(player, socket);
   });
 });
 

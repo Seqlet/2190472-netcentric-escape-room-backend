@@ -1,10 +1,10 @@
 import { JoinRoom } from "./Interfaces/index";
 import { Event, Player, HatType, PlayerType, Position } from "./Interfaces";
 import { randomID, randomPos } from "./random";
-import { Server } from "socket.io";
+import { Socket } from "socket.io";
 import gameArray from "./game";
 
-function joinRoom({ playerName, roomCode }: JoinRoom, io: Server) {
+function joinRoom({ playerName, roomCode }: JoinRoom, socket: Socket) {
   const game = gameArray.find((room) => room.roomCode === roomCode);
   let secPlayerType = PlayerType.SPECTATOR;
   let playerPos: Position | null = null;
@@ -26,7 +26,7 @@ function joinRoom({ playerName, roomCode }: JoinRoom, io: Server) {
       victory: 0,
     };
     game.players.push(player2);
-    io.emit(Event.JOIN_ROOM, player2);
+    socket.emit(Event.JOIN_ROOM, player2);
   }
 }
 export default joinRoom;

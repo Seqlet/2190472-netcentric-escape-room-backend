@@ -31,6 +31,7 @@ export interface Game {
   currentPlayer: PlayerType;
   roomCode: string;
   players: Array<Player>;
+  intervalSet?: NodeJS.Timeout;
 }
 
 export enum Event {

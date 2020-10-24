@@ -1,7 +1,5 @@
 import  {random, randomID, randomPos } from "./random";
-import { nanoid } from "nanoid";
-import { Player, HatType, PlayerType, Game, Event } from "./Interfaces/index";
-import { isObject } from "util";
+import { Player, HatType, Game, Event } from "./Interfaces/index";
 import { Server } from 'socket.io';
 import gameArray  from './game'
 

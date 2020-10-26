@@ -1,11 +1,9 @@
 import  {random, randomID, randomPos } from "./random";
-import { nanoid } from "nanoid";
-import { Player, HatType, PlayerType, Game, Event } from "./Interfaces/index";
-import { isObject } from "util";
-import { Server } from 'socket.io';
+import { Player, HatType, Game, Event } from "./Interfaces/index";
+import { Socket } from 'socket.io';
 import gameArray  from './game'
 
-function createGame(playerName: string, io: Server) {
+function createGame(playerName: string, socket: Socket) {
   let randomRoomcode = randomID()
   while(gameArray.find(game => game.roomCode === randomRoomcode)) {
     randomRoomcode = randomID()
@@ -38,7 +36,7 @@ function createGame(playerName: string, io: Server) {
 
     gameArray.push(game)
 
-    io.emit(Event.CREATE_GAME, player1)
+    socket.emit(Event.CREATE_GAME, player1)
 }
 
 

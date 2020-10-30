@@ -39,6 +39,9 @@ export enum Event {
   PREJOIN_ROOM = "prejoin room",
   JOIN_ROOM = "join room",
   PLAY_GAME = "play game",
+  RESET_GAME = "reset game",
+  JOIN_LOBBY = "join lobby",
+  CHANGE_COSTUME = "change costume"
 }
 
 export interface JoinRoom {

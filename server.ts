@@ -9,8 +9,11 @@ import prejoinRoom from "./prejoinroom";
 import joinRoom from "./joinroom";
 import createGame from "./createroom";
 import gameArray from "./game";
-import playGame, { findGame } from "./playgame";
+import playGame from "./playgame";
 import { myTimer } from "./timer";
+import { findGame } from "./findgame";
+import { resetGame } from "./reset";
+import { changeCostume } from "./changecostume";
 const io = socketio(server);
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
@@ -30,7 +33,9 @@ io.on("connection", function (socket: Socket) {
   socket.on(Event.CREATE_GAME, function (playerName: string) {
     createGame(playerName, socket);
   });
-
+  socket.on(Event.CHANGE_COSTUME, function(player : Player){
+    changeCostume(player,socket);
+  });
   socket.on(Event.PLAY_GAME, function (player: Player, update?: boolean) {
     const game = findGame(gameArray, player);
     let id = game?.intervalSet;
@@ -38,6 +43,14 @@ io.on("connection", function (socket: Socket) {
       id = setInterval(() => myTimer(game, io), 1000);
     }
     playGame(player, socket);
+  });
+  socket.on(Event.RESET_GAME, function(game: Game){
+    resetGame(game, socket);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+    socket.broadcast.emit('A user disconnected');
   });
 });
 

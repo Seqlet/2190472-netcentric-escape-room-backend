@@ -9,24 +9,26 @@ function joinRoom({ playerName, roomCode }: JoinRoom, socket: Socket) {
   let secPlayerType = PlayerType.SPECTATOR;
   let playerPos: Position | null = null;
   if (game) {
-    const numPlayer = game.players.length;
-    if (numPlayer === 1) {
-      const firstPlayerType = game.players[0].playerType;
-      secPlayerType = 1 - firstPlayerType;
-      playerPos = randomPos(game);
-    } else if (numPlayer < 1) {
-      throw new Error("Player Number Wrong!");
-    }
-    let player2: Player = {
-      id: randomID(),
-      name: playerName,
-      hatType: HatType.NEW,
-      playerType: secPlayerType,
-      position: playerPos,
-      victory: 0,
-    };
-    game.players.push(player2);
-    socket.emit(Event.JOIN_ROOM, player2);
+    socket.join(game.roomCode, () => {
+      const numPlayer = game.players.length;
+      if (numPlayer === 1) {
+        const firstPlayerType = game.players[0].playerType;
+        secPlayerType = 1 - firstPlayerType;
+        playerPos = randomPos(game);
+      } else if (numPlayer < 1) {
+        throw new Error("Player Number Wrong!");
+      }
+      let player2: Player = {
+        id: randomID(),
+        name: playerName,
+        hatType: HatType.NEW,
+        playerType: secPlayerType,
+        position: playerPos,
+        victory: 0,
+      };
+      game.players.push(player2);
+      socket.to(game.roomCode).emit(Event.JOIN_LOBBY, player2);
+    })
   }
 }
 export default joinRoom;

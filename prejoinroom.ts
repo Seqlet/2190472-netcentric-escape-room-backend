@@ -1,4 +1,4 @@
-import { Game, Player, Event } from "./Interfaces/index";
+import { Event } from "./Interfaces/index";
 import { Socket } from 'socket.io';
 import gameArray from "./game";
 

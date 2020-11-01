@@ -1,5 +1,6 @@
-import {Game} from './interfaces'
+import { Game } from "./interfaces";
 
-const gameArray: Game[] = []
+const gameArray: Game[] = [];
+export const timers: (NodeJS.Timeout | null)[] = [];
 
 export default gameArray;

@@ -8,7 +8,7 @@ import socketio, { Socket } from "socket.io";
 import prejoinRoom from "./prejoinroom";
 import joinRoom from "./joinroom";
 import createGame from "./createroom";
-import gameArray from "./game";
+import gameArray, { timers } from "./game";
 import playGame from "./playgame";
 import { myTimer } from "./timer";
 import { findGame } from "./findgame";
@@ -19,39 +19,45 @@ const io = socketio(server);
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 app.get("/", (req, res) => {
-  res.end("TGR");
+  res.end("Server Running");
 });
 
 io.on("connection", function (socket: Socket) {
   console.log("user connected");
-  socket.on(Event.PREJOIN_ROOM, function (roomCode: string) {
+  socket.on(Event.FIND_LOBBY, function (roomCode: string) {
     prejoinRoom(roomCode, socket);
   });
   socket.on(Event.JOIN_ROOM, function (data: JoinRoom) {
-    joinRoom(data, socket);
+    joinRoom(data, socket, io);
   });
   socket.on(Event.CREATE_GAME, function (playerName: string) {
-    createGame(playerName, socket);
+    createGame(playerName, socket, io);
   });
-  socket.on(Event.CHANGE_COSTUME, function(player : Player){
-    changeCostume(player,socket);
+  socket.on(Event.CHANGE_COSTUME, function (player: Player) {
+    changeCostume(player, io);
   });
-  socket.on(Event.PLAY_GAME, function (player: Player, update?: boolean) {
-    const game = findGame(gameArray, player);
-    let id = game?.intervalSet;
-    if (!update && game?.intervalSet === null) {
-      id = setInterval(() => myTimer(game, io), 1000);
+  socket.on(Event.PLAY_GAME, function (player: Player) {
+    const gameIndex = gameArray.findIndex((game) =>
+      game.players.find((gamePlayer) => gamePlayer.id === player.id)
+    );
+    if (timers[gameIndex] === null) {
+      timers[gameIndex] = setInterval(
+        () => myTimer(gameArray[gameIndex], io),
+        1000
+      );
+      // game.intervalSet = intervalSet;
     }
-    playGame(player, socket);
+    playGame(player, io);
   });
-  socket.on(Event.RESET_GAME, function(game: Game){
+  socket.on(Event.RESET_GAME, function (game: Game) {
+    resetGame(game, socket);
+  });
+  socket.on(Event.PLAY_AGAIN, function (game: Game) {
     resetGame(game, socket);
   });
 
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-    socket.broadcast.emit('A user disconnected');
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+    socket.broadcast.emit("A user disconnected");
   });
 });
-
-

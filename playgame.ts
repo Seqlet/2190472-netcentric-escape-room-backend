@@ -17,6 +17,13 @@ function playGame(updatedPlayer: Player, io: Server) {
       updatedPlayer.position as Position,
       currentGame.players[playerIndex].position as Position
     );
+    console.log(
+      "dsfd",
+      playerIndex,
+      nearbyPosition,
+      updatedPlayer.position,
+      currentGame.players[playerIndex].position
+    );
     if (
       playerIndex !== undefined &&
       nearbyPosition &&
@@ -25,6 +32,7 @@ function playGame(updatedPlayer: Player, io: Server) {
       ) &&
       currentGame?.currentPlayer === updatedPlayer.playerType
     ) {
+      console.log("???", nearbyPosition);
       currentGame!.players[playerIndex as number] = updatedPlayer;
       currentGame.currentPlayer = 1 - currentGame.currentPlayer;
       if (
@@ -35,6 +43,7 @@ function playGame(updatedPlayer: Player, io: Server) {
         )
       ) {
         clearInterval(timers[gameIndex] as NodeJS.Timeout);
+        timers[gameIndex] = null;
         currentGame.winner = PlayerType.WARDER;
       }
       if (
@@ -46,6 +55,7 @@ function playGame(updatedPlayer: Player, io: Server) {
         )
       ) {
         clearInterval(timers[gameIndex] as NodeJS.Timeout);
+        timers[gameIndex] = null;
         currentGame.winner = PlayerType.PRISONER;
       }
       currentGame.timer = 10;

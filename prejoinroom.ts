@@ -1,13 +1,12 @@
 import { Event } from "./Interfaces/index";
-import { Socket } from 'socket.io';
+import { Socket } from "socket.io";
 import gameArray from "./game";
 
-function prejoinRoom(roomCode:String, socket: Socket) {
-  console.log("prejoin room: " + roomCode);
+function prejoinRoom(roomCode: String, socket: Socket) {
   if (gameArray.find((room) => room.roomCode === roomCode)) {
-    socket.emit(Event.PREJOIN_ROOM, roomCode);
+    socket.emit(Event.FIND_LOBBY, roomCode);
   } else {
-    socket.emit(Event.PREJOIN_ROOM, null);
+    socket.emit(Event.FIND_LOBBY, null);
   }
 }
 

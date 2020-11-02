@@ -1,9 +1,9 @@
 import { random, randomID, randomPos } from "./random";
 import { Player, HatType, Game, Event } from "./Interfaces/index";
-import { Socket } from "socket.io";
-import gameArray from "./game";
+import { Socket, Server } from "socket.io";
+import gameArray, { timers } from "./game";
 
-function createGame(playerName: string, socket: Socket) {
+function createGame(playerName: string, socket: Socket, io: Server) {
   let randomRoomcode = randomID();
 
   while (gameArray.find((game) => game.roomCode === randomRoomcode)) {
@@ -35,9 +35,10 @@ function createGame(playerName: string, socket: Socket) {
     game.obstaclePositions.push(randomPos(game));
   }
   gameArray.push(game);
+  timers.push(null);
 
   socket.join(game.roomCode, () => {
-    socket.emit(Event.JOIN_LOBBY, player1);
+    io.to(game.roomCode).emit(Event.JOIN_LOBBY, game);
   });
 }
 

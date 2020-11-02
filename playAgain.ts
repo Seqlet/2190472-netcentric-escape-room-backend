@@ -3,7 +3,7 @@ import gameArray, { timers } from "./game";
 import { Game, Event } from "./Interfaces";
 import { random, randomPos } from "./random";
 
-export function resetGame(game: Game, io: Server) {
+export function playAgain(game: Game, io: Server) {
   let regame: Game = {
     exitPosition: { x: random(5), y: random(5) },
     obstaclePositions: [],
@@ -19,10 +19,8 @@ export function resetGame(game: Game, io: Server) {
 
   regame.players = game.players;
   regame.players[0].position = randomPos(regame);
-  regame.players[0].victory = 0;
   regame.players[0].playerType = 1 - regame.players[0].playerType;
   regame.players[1].position = randomPos(regame);
-  regame.players[1].victory = 0;
   regame.players[1].playerType = 1 - regame.players[1].playerType;
 
   const gameIndex = gameArray.findIndex((game) => game.roomCode);
@@ -31,5 +29,5 @@ export function resetGame(game: Game, io: Server) {
   clearInterval(timers[gameIndex] as NodeJS.Timeout);
   timers[gameIndex] = null;
 
-  io.to(game.roomCode).emit(Event.JOIN_LOBBY, regame);
+  io.to(game.roomCode).emit(Event.PLAY_GAME, regame);
 }

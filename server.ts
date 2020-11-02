@@ -14,6 +14,7 @@ import { myTimer } from "./timer";
 import { findGame } from "./findgame";
 import { resetGame } from "./reset";
 import { changeCostume } from "./changecostume";
+import { playAgain } from "./playAgain";
 const io = socketio(server);
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
@@ -45,15 +46,14 @@ io.on("connection", function (socket: Socket) {
         () => myTimer(gameArray[gameIndex], io),
         1000
       );
-      // game.intervalSet = intervalSet;
     }
     playGame(player, io);
   });
   socket.on(Event.RESET_GAME, function (game: Game) {
-    resetGame(game, socket);
+    resetGame(game, io);
   });
   socket.on(Event.PLAY_AGAIN, function (game: Game) {
-    resetGame(game, socket);
+    playAgain(game, io);
   });
 
   socket.on("disconnect", () => {

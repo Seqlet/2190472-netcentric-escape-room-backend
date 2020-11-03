@@ -14,6 +14,7 @@ function createGame(playerName: string, socket: Socket, io: Server) {
     exitPosition: { x: random(5), y: random(5) },
     obstaclePositions: [],
     timer: 10,
+    maxTimer: 10,
     winner: null,
     currentPlayer: random(2),
     roomCode: randomRoomcode,

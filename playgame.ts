@@ -18,7 +18,7 @@ function playGame(updatedPlayer: Player, io: Server) {
       currentGame.players[playerIndex].position as Position
     );
     console.log(
-      "dsfd",
+      "Position",
       playerIndex,
       nearbyPosition,
       updatedPlayer.position,
@@ -58,7 +58,7 @@ function playGame(updatedPlayer: Player, io: Server) {
         timers[gameIndex] = null;
         currentGame.winner = PlayerType.PRISONER;
       }
-      currentGame.timer = 10;
+      currentGame.timer = currentGame.maxTimer;
       io.to(currentGame?.roomCode || "").emit(Event.PLAY_GAME, currentGame);
     }
   }

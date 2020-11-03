@@ -2,12 +2,14 @@ import { Server } from "socket.io";
 import gameArray, { timers } from "./game";
 import { Game, Event } from "./Interfaces";
 import { random, randomPos } from "./random";
+import { myTimer } from "./timer";
 
 export function playAgain(game: Game, io: Server) {
   let regame: Game = {
     exitPosition: { x: random(5), y: random(5) },
     obstaclePositions: [],
-    timer: 10,
+    timer: game.maxTimer,
+    maxTimer: game.maxTimer,
     winner: null,
     currentPlayer: random(2),
     roomCode: game.roomCode,
@@ -26,8 +28,10 @@ export function playAgain(game: Game, io: Server) {
   const gameIndex = gameArray.findIndex((game) => game.roomCode);
   gameArray[gameIndex] = regame;
 
-  clearInterval(timers[gameIndex] as NodeJS.Timeout);
-  timers[gameIndex] = null;
+  timers[gameIndex] = setInterval(
+    () => myTimer(gameArray[gameIndex], io),
+    1000
+  )
 
   io.to(game.roomCode).emit(Event.PLAY_GAME, regame);
 }

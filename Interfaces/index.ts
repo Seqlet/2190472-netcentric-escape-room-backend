@@ -27,6 +27,7 @@ export interface Game {
   exitPosition: Position;
   obstaclePositions: Array<Position>;
   timer: number;
+  maxTimer:number;
   winner: PlayerType | null;
   currentPlayer: PlayerType;
   roomCode: string;
@@ -41,10 +42,16 @@ export enum Event {
   RESET_GAME = "reset game",
   JOIN_LOBBY = "join lobby",
   CHANGE_COSTUME = "change costume",
+  CHANGE_TIMER = "change timer",
   PLAY_AGAIN = "play again",
 }
 
 export interface JoinRoom {
   playerName: string;
   roomCode: string;
+}
+
+export interface SetTimer {
+  player: Player;
+  timer: number;
 }

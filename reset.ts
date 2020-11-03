@@ -7,7 +7,8 @@ export function resetGame(game: Game, io: Server) {
   let regame: Game = {
     exitPosition: { x: random(5), y: random(5) },
     obstaclePositions: [],
-    timer: 10,
+    timer: game.maxTimer,
+    maxTimer: game.maxTimer,
     winner: null,
     currentPlayer: random(2),
     roomCode: game.roomCode,

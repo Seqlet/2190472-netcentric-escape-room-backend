@@ -1,4 +1,4 @@
-import { Event, Game, JoinRoom, Player } from "./Interfaces/index";
+import { Event, Game, JoinRoom, Player, SetTimer } from "./Interfaces/index";
 import express from "express";
 const app = express();
 import http from "http";
@@ -15,6 +15,7 @@ import { findGame } from "./findgame";
 import { resetGame } from "./reset";
 import { changeCostume } from "./changecostume";
 import { playAgain } from "./playAgain";
+import { changeTimer } from "./changetimer";
 const io = socketio(server);
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
@@ -24,7 +25,6 @@ app.get("/", (req, res) => {
 });
 
 io.on("connection", function (socket: Socket) {
-  console.log("user connected");
   socket.on(Event.FIND_LOBBY, function (roomCode: string) {
     prejoinRoom(roomCode, socket);
   });
@@ -36,6 +36,9 @@ io.on("connection", function (socket: Socket) {
   });
   socket.on(Event.CHANGE_COSTUME, function (player: Player) {
     changeCostume(player, io);
+  });
+  socket.on(Event.CHANGE_TIMER, function (timerData: SetTimer) {
+    changeTimer(timerData, io);
   });
   socket.on(Event.PLAY_GAME, function (player: Player) {
     const gameIndex = gameArray.findIndex((game) =>

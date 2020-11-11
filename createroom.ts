@@ -1,5 +1,5 @@
 import { random, randomID, randomPos } from "./random";
-import { Player, HatType, Game, Event } from "./Interfaces/index";
+import { Player, HatType, Game, Event, PlayerType } from "./Interfaces/index";
 import { Socket, Server } from "socket.io";
 import gameArray, { timers } from "./game";
 
@@ -16,7 +16,7 @@ function createGame(playerName: string, socket: Socket, io: Server) {
     timer: 10,
     maxTimer: 10,
     winner: null,
-    currentPlayer: random(2),
+    currentPlayer: PlayerType.WARDER,
     roomCode: randomRoomcode,
     players: [],
   };

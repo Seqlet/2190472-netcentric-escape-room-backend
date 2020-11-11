@@ -13,4 +13,5 @@ export const isNearbyPosition = (position1: Position, position2: Position) => {
       Math.abs(position1.y - position2.y) ===
     1
   );
+  
 };

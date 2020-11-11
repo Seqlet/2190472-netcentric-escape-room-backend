@@ -30,9 +30,9 @@ function playGame(updatedPlayer: Player, io: Server) {
       !currentGame.obstaclePositions.find((obsPosition) =>
         comparePosition(updatedPlayer.position, obsPosition.x, obsPosition.y)
       ) &&
-      currentGame?.currentPlayer === updatedPlayer.playerType
+      currentGame?.currentPlayer === updatedPlayer.playerType &&
+        !(updatedPlayer.playerType === PlayerType.WARDER && comparePosition(updatedPlayer.position, currentGame.exitPosition.x, currentGame.exitPosition.y))
     ) {
-      console.log("???", nearbyPosition);
       currentGame!.players[playerIndex as number] = updatedPlayer;
       currentGame.currentPlayer = 1 - currentGame.currentPlayer;
       if (
@@ -45,6 +45,8 @@ function playGame(updatedPlayer: Player, io: Server) {
         clearInterval(timers[gameIndex] as NodeJS.Timeout);
         timers[gameIndex] = null;
         currentGame.winner = PlayerType.WARDER;
+        const winnerIndex = currentGame.players.findIndex(player => currentGame.winner === player.playerType)
+        currentGame.players[winnerIndex].victory++;
       }
       if (
         updatedPlayer.playerType === PlayerType.PRISONER &&
@@ -52,11 +54,13 @@ function playGame(updatedPlayer: Player, io: Server) {
           currentGame.exitPosition,
           updatedPlayer.position!.x,
           updatedPlayer.position!.y
-        )
-      ) {
-        clearInterval(timers[gameIndex] as NodeJS.Timeout);
-        timers[gameIndex] = null;
-        currentGame.winner = PlayerType.PRISONER;
+          )
+          ) {
+            clearInterval(timers[gameIndex] as NodeJS.Timeout);
+            timers[gameIndex] = null;
+            currentGame.winner = PlayerType.PRISONER;
+            const winnerIndex = currentGame.players.findIndex(player => currentGame.winner === player.playerType)
+            currentGame.players[winnerIndex].victory++;
       }
       currentGame.timer = currentGame.maxTimer;
       io.to(currentGame?.roomCode || "").emit(Event.PLAY_GAME, currentGame);

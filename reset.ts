@@ -31,8 +31,6 @@ export function resetGame(game: Game, io: Server) {
   );
   gameArray[gameIndex] = regame;
 
-  console.log(gameArray, timers, "debug reset", gameIndex);
-
   clearInterval(timers[gameIndex] as NodeJS.Timeout);
   timers[gameIndex] = null;
 

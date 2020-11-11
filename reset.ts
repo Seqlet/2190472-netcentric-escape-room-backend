@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
 import gameArray, { timers } from "./game";
-import { Game, Event } from "./Interfaces";
+import { Game, Event, PlayerType } from "./Interfaces";
 import { random, randomPos } from "./random";
 
 export function resetGame(game: Game, io: Server) {
@@ -10,7 +10,7 @@ export function resetGame(game: Game, io: Server) {
     timer: game.maxTimer,
     maxTimer: game.maxTimer,
     winner: null,
-    currentPlayer: random(2),
+    currentPlayer: PlayerType.WARDER,
     roomCode: game.roomCode,
     players: [],
   };

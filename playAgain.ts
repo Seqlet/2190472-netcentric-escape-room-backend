@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
 import gameArray, { timers } from "./game";
-import { Game, Event } from "./Interfaces";
+import { Game, Event, PlayerType } from "./Interfaces";
 import { random, randomPos } from "./random";
 import { myTimer } from "./timer";
 
@@ -11,7 +11,7 @@ export function playAgain(game: Game, io: Server) {
     timer: game.maxTimer,
     maxTimer: game.maxTimer,
     winner: null,
-    currentPlayer: random(2),
+    currentPlayer: PlayerType.WARDER,
     roomCode: game.roomCode,
     players: [],
   };
@@ -19,11 +19,14 @@ export function playAgain(game: Game, io: Server) {
     regame.obstaclePositions.push(randomPos(regame));
   }
 
+  const lastWinnerIndex = game.players.findIndex(player => game.winner === player.playerType)
+
   regame.players = game.players;
-  regame.players[0].position = randomPos(regame);
-  regame.players[0].playerType = 1 - regame.players[0].playerType;
-  regame.players[1].position = randomPos(regame);
-  regame.players[1].playerType = 1 - regame.players[1].playerType;
+  regame.players[lastWinnerIndex].position = randomPos(regame);
+  regame.players[lastWinnerIndex].playerType = PlayerType.WARDER;
+  regame.players[1-lastWinnerIndex].position = randomPos(regame);
+  regame.players[1-lastWinnerIndex].playerType = PlayerType.PRISONER;
+  regame.currentPlayer = PlayerType.WARDER
 
   const gameIndex = gameArray.findIndex((game) => game.roomCode);
   gameArray[gameIndex] = regame;

@@ -26,8 +26,12 @@ export function resetGame(game: Game, io: Server) {
   regame.players[1].victory = 0;
   regame.players[1].playerType = 1 - regame.players[1].playerType;
 
-  const gameIndex = gameArray.findIndex((game) => game.roomCode);
+  const gameIndex = gameArray.findIndex(
+    (_game) => _game.roomCode === game.roomCode
+  );
   gameArray[gameIndex] = regame;
+
+  console.log(gameArray, timers, "debug reset", gameIndex);
 
   clearInterval(timers[gameIndex] as NodeJS.Timeout);
   timers[gameIndex] = null;

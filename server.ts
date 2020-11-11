@@ -11,7 +11,6 @@ import createGame from "./createroom";
 import gameArray, { timers } from "./game";
 import playGame from "./playgame";
 import { myTimer } from "./timer";
-import { findGame } from "./findgame";
 import { resetGame } from "./reset";
 import { changeCostume } from "./changecostume";
 import { playAgain } from "./playAgain";
@@ -23,8 +22,10 @@ server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 app.get("/", (req, res) => {
   res.end("Server Running");
 });
+const userSocketIdMap = new Map();
 
 io.on("connection", function (socket: Socket) {
+  io.emit(Event.CURRENT_USERS_COUNT, socket.client.conn.server.clientsCount);
   socket.on(Event.FIND_LOBBY, function (roomCode: string) {
     prejoinRoom(roomCode, socket);
   });
@@ -61,6 +62,6 @@ io.on("connection", function (socket: Socket) {
 
   socket.on("disconnect", () => {
     console.log("user disconnected");
-    socket.broadcast.emit("A user disconnected");
+    io.emit(Event.CURRENT_USERS_COUNT, socket.client.conn.server.clientsCount);
   });
 });

@@ -1,7 +1,9 @@
 import { Event, Game, JoinRoom, Player, SetTimer } from "./Interfaces/index";
 import express from "express";
+import cors from "cors";
 const app = express();
 import http from "http";
+app.use(cors());
 const server = http.createServer(app);
 const PORT = process.env.PORT || 8000;
 import socketio, { Socket } from "socket.io";

@@ -19,22 +19,26 @@ export function playAgain(game: Game, io: Server) {
     regame.obstaclePositions.push(randomPos(regame));
   }
 
-  const lastWinnerIndex = game.players.findIndex(player => game.winner === player.playerType)
+  const lastWinnerIndex = game.players.findIndex(
+    (player) => game.winner === player.playerType
+  );
 
   regame.players = game.players;
   regame.players[lastWinnerIndex].position = randomPos(regame);
   regame.players[lastWinnerIndex].playerType = PlayerType.WARDER;
-  regame.players[1-lastWinnerIndex].position = randomPos(regame);
-  regame.players[1-lastWinnerIndex].playerType = PlayerType.PRISONER;
-  regame.currentPlayer = PlayerType.WARDER
+  regame.players[1 - lastWinnerIndex].position = randomPos(regame);
+  regame.players[1 - lastWinnerIndex].playerType = PlayerType.PRISONER;
+  regame.currentPlayer = PlayerType.WARDER;
 
   const gameIndex = gameArray.findIndex((game) => game.roomCode);
   gameArray[gameIndex] = regame;
 
-  timers[gameIndex] = setInterval(
-    () => myTimer(gameArray[gameIndex], io),
-    1000
-  )
+  if (timers[gameIndex] === null) {
+    timers[gameIndex] = setInterval(
+      () => myTimer(gameArray[gameIndex], io),
+      1000
+    );
+  }
 
   io.to(game.roomCode).emit(Event.PLAY_GAME, regame);
 }

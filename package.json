@@ -6,11 +6,13 @@
   "author": "Seqlet <ratchanoneks@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "nanoid": "^3.1.12",
     "socket.io": "^2.3.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.8",
     "@types/express": "^4.17.8",
     "@types/node": "^14.14.0",
     "@types/socket.io": "^2.1.11",
@@ -22,4 +24,3 @@
     "start": "nodemon server.ts"
   }
 }
-
